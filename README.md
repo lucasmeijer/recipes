@@ -1,0 +1,33 @@
+# Recipes
+
+My recipes as one-page "toolcharts": each recipe is a single rectangular flowchart, with ingredients down the left and steps to the right, in the style of Cooking for Engineers. Each one is a self-contained HTML file that works on a phone, tablet or desktop.
+
+Live at **https://recipes.lucasmeijer.com**.
+
+## Make your own
+
+Fork or clone this repo, then ask your coding agent (Claude Code, Codex, …) for a recipe:
+
+> Make a recipe toolchart for chicken tikka masala.
+
+The agent follows the skills in [`skills/`](skills):
+
+| Skill | What it does |
+|---|---|
+| [recipe-toolchart](skills/recipe-toolchart/SKILL.md) | Turns a recipe into a toolchart HTML page, saved in `recipes/` |
+| [batch-cooking](skills/batch-cooking/SKILL.md) | Designs freezer-friendly batch recipes sized to whole grocery packs |
+| [crisp-groceries](skills/crisp-groceries/SKILL.md) | Shops and manages recipes in the Crisp app (a Dutch/Belgian grocery delivery service) |
+
+Delete the recipes in `recipes/` that you don't want, and `crisp-groceries` if you don't use Crisp.
+
+## Publish
+
+`node build.mjs` copies `recipes/*.html` into `dist/` and generates `dist/index.html`, a searchable list of every recipe, newest first. It has no dependencies.
+
+To host it on Cloudflare Pages:
+
+1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages → Connect to Git** and pick your fork.
+2. Set the build command to `node build.mjs` and the output directory to `dist`.
+3. Optionally, add a custom domain under **Custom domains**.
+
+Every push then publishes automatically. Each recipe is available at `/<file-name>`, e.g. `/puttanesca`. Open the index on your phone and use **Add to Home Screen**.

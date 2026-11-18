@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Spaghetti alla Puttanesca</title>
+<style>
+/* ── toolchart styling: copy verbatim, do not edit ── */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Kalam:wght@400;700&display=swap");
+
+:root{
+  --font:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-head:Kalam,"Comic Sans MS",cursive;
+  --fs:15px;
+  --paper:#fdfcf3; --sheet:#fffef8; --ink:#1f2a44; --muted:#6a7593;
+  --rule:#3a5a9a;   /* outer frame */
+  --line:#a9bbdf;   /* lines between cells */
+  --hold:#8fa3cc;   /* pass-through arrows */
+  --prep:#2f6fd6; --heat:#d65a2f; --combine:#8a4fd6; --finish:#2f9a5a;
+  --tint:9%;
+  --ingw:190px;     /* ingredient column */
+  --colmin:150px;   /* narrowest a step column may get */
+  --pad:12px;
+}
+
+/* ───── page ───── */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;font:var(--fs)/1.4 var(--font);color:var(--ink);
+  background:linear-gradient(rgba(58,90,154,.12) 1px,transparent 1px) 0 0/100% 28px,var(--paper);
+  padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 48px max(16px,env(safe-area-inset-left));
+  max-width:1320px;margin-inline:auto;
+}
+
+/* ───── one-line header ───── */
+body > header{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 24px;
+  border:1.5px solid var(--rule);background:var(--sheet);padding:10px 14px;margin-bottom:12px;
+}
+body > header > *{margin:0;font-size:1em;font-weight:400}
+body > header h1{font:700 1.2em/1.2 var(--font-head)}
+body > header em{font-style:normal;color:var(--muted);margin-right:4px}
+
+/* ───── the chart ───── */
+.toolchart{
+  container-type:inline-size;
+  overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;
+  border:1.5px solid var(--rule);background:var(--sheet);
+  /* how many step columns → deepest nesting of .step (up to 12) */
+  --cols:1;
+}
+.toolchart:has(.step .step){--cols:2}
+.toolchart:has(.step .step .step){--cols:3}
+.toolchart:has(.step .step .step .step){--cols:4}
+.toolchart:has(.step .step .step .step .step){--cols:5}
+.toolchart:has(.step .step .step .step .step .step){--cols:6}
+.toolchart:has(.step .step .step .step .step .step .step){--cols:7}
+.toolchart:has(.step .step .step .step .step .step .step .step){--cols:8}
+.toolchart:has(.step .step .step .step .step .step .step .step .step){--cols:9}
+.toolchart:has(.step .step .step .step .step .step .step .step .step .step){--cols:10}
+.toolchart:has(.step .step .step .step .step .step .step .step .step .step .step){--cols:11}
+.toolchart:has(.step .step .step .step .step .step .step .step .step .step .step .step){--cols:12}
+.toolchart > .step{
+  /* step columns share whatever width is left after the ingredient column */
+  --colw:max(var(--colmin),calc((100cqw - var(--ingw) - 1px) / var(--cols)));
+  width:max-content;min-width:100%;
+}
+
+/* A step = [its inputs stacked] [its own cell] [pass-through filler]  */
+.step{display:flex;align-items:stretch;--c:var(--prep)}
+.step.heat{--c:var(--heat)}
+.step.combine{--c:var(--combine)}
+.step.finish{--c:var(--finish)}
+
+.in{display:flex;flex-direction:column;flex:none}
+.in > *{flex:1 1 auto}
+.in > * + *{border-top:1px solid var(--line)}
+
+.do{
+  flex:none;width:var(--colw);
+  border-left:1px solid var(--line);margin-left:-1px;
+  padding:12px var(--pad);
+  display:flex;flex-direction:column;justify-content:center;gap:3px;
+  background:color-mix(in srgb,var(--c) var(--tint),var(--sheet));
+}
+.do h3{margin:0;font:700 1.35em/1.05 var(--font-head)}
+.do p{margin:0;font-size:.93em;line-height:1.4;color:color-mix(in srgb,var(--ink) 85%,var(--sheet))}
+.do p b,.do p strong{color:var(--ink)}
+.do time{font-size:.82em;font-weight:700;color:var(--muted)}
+
+/* Ingredient = [qty / name / note] [pass-through filler] */
+.ing{
+  display:grid;grid-template-columns:var(--ingw) 1fr;align-content:center;
+  background:var(--sheet);
+}
+.ing > *{grid-column:1;padding:0 var(--pad);line-height:1.25}
+.ing > :first-child{padding-top:9px}
+.ing > :last-child{padding-bottom:9px}
+.ing b{font-weight:700;color:var(--muted);font-size:.9em}
+.ing span{font-weight:700}
+.ing small{font-size:.8em;color:var(--muted)}
+
+/* pass-through filler: dashed arrow with optional label (data-wait) */
+.step::after,.ing::after{
+  content:attr(data-wait);
+  flex:1 0 0;min-width:0;
+  border-left:1px solid var(--line);margin-left:-1px;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 0 1.9em;overflow:hidden;
+  font:400 14px/1 var(--font-head);color:var(--muted);text-align:center;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='10'%3E%3Cpath d='M0 0L9 5L0 10z' fill='%238fa3cc'/%3E%3C/svg%3E") right 50%/9px 10px no-repeat,
+    linear-gradient(90deg,var(--hold) 50%,transparent 0) 0 50%/9px 1.5px repeat-x;
+}
+.toolchart > .step::after{display:none}
+.toolchart > .step > .do{flex-grow:1}
+.ing::after{content:"";grid-column:2;grid-row:1 / span 3;padding:0}
+
+/* ───── responsive ───── */
+@media (max-width:1024px){ :root{--ingw:150px;--colmin:122px;--pad:10px;--fs:14px} }
+@media (max-width:640px){
+  :root{--ingw:118px;--colmin:156px;--pad:9px}
+  body{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+  body > header{padding:8px 10px}
+  body > header{gap:2px 16px}
+  body > header h1{flex-basis:100%}
+}
+@media (max-height:500px) and (orientation:landscape){ :root{--ingw:150px;--colmin:120px;--pad:8px} body{padding-top:8px} }
+@media print{
+  @page{size:landscape;margin:10mm}
+  body{background:#fff;padding:0}
+  .toolchart{overflow:visible}
+}
+</style>
+</head>
+<body>
+<!-- ═══ RECIPE CONTENT: replace everything between here and </body> ═══ -->
+
+<header>
+  <h1>Spaghetti alla Puttanesca</h1>
+  <span><em>Serves</em> 4</span>
+  <span><em>Active</em> 25 min</span>
+  <span><em>Total</em> 30 min</span>
+  <span><em>Equipment</em> Large pot · 12″ skillet · Cutting board · Tongs</span>
+</header>
+
+<div class="toolchart">
+  <div class="step finish">
+    <div class="in">
+      <div class="step combine">
+        <div class="in">
+
+          <div class="step heat">
+            <div class="in">
+              <div class="step heat">
+                <div class="in">
+                  <div class="ing"><b>4 L</b><span>Water</span></div>
+                  <div class="ing"><b>1 Tbsp</b><span>Kosher salt</span><small>less than usual; sauce is salty</small></div>
+                </div>
+                <div class="do"><h3>Boil</h3><p>Cover and bring to a <b>rolling boil</b>.</p><time>~10 min</time></div>
+              </div>
+              <div class="ing"><b>400 g</b><span>Spaghetti</span></div>
+            </div>
+            <div class="do"><h3>Cook</h3><p>Add pasta, stir. Cook <b>2 min less</b> than the package says. Save <b>1 cup</b> pasta water.</p><time>8 min</time></div>
+          </div>
+
+          <div class="step heat">
+            <div class="in">
+              <div class="step heat">
+                <div class="in">
+                  <div class="ing"><b>3 Tbsp</b><span>Olive oil</span></div>
+                  <div class="step">
+                    <div class="in">
+                      <div class="ing"><b>4 cloves</b><span>Garlic</span></div>
+                    </div>
+                    <div class="do"><h3>Slice</h3><p>Into <b>thin slices</b>.</p></div>
+                  </div>
+                  <div class="ing"><b>6</b><span>Anchovy fillets</span><small>oil-packed</small></div>
+                  <div class="ing"><b>½ tsp</b><span>Chili flakes</span></div>
+                </div>
+                <div class="do"><h3>Sizzle</h3><p>Garlic in oil over <b>medium-low</b> until pale gold. Add anchovies and chili; mash until <b>melted</b>.</p><time>3–4 min</time></div>
+              </div>
+              <div class="step">
+                <div class="in">
+                  <div class="ing"><b>800 g</b><span>Whole peeled tomatoes</span><small>1 large can, San Marzano</small></div>
+                </div>
+                <div class="do"><h3>Crush</h3><p>By hand into <b>small pieces</b>, juices and all.</p></div>
+              </div>
+              <div class="step">
+                <div class="in">
+                  <div class="ing"><b>100 g</b><span>Black olives</span><small>Gaeta or Kalamata, pitted</small></div>
+                  <div class="ing"><b>2 Tbsp</b><span>Capers</span><small>rinsed</small></div>
+                </div>
+                <div class="do"><h3>Chop</h3><p>Olives roughly <b>halved</b>; capers left whole or coarsely chopped.</p></div>
+              </div>
+            </div>
+            <div class="do"><h3>Simmer</h3><p>Add tomatoes, olives and capers. Simmer on <b>medium</b> until thickened, stirring now and then.</p><time>10–12 min</time></div>
+          </div>
+
+          <div class="step" data-wait="set aside">
+            <div class="in">
+              <div class="ing"><b>small handful</b><span>Flat-leaf parsley</span></div>
+            </div>
+            <div class="do"><h3>Chop</h3><p>Leaves <b>finely</b> chopped.</p></div>
+          </div>
+
+        </div>
+        <div class="do"><h3>Toss</h3><p>Tong pasta into sauce with <b>½ cup pasta water</b>. Toss on high until pasta is <b>al dente</b> and glossy. Stir in parsley.</p><time>1–2 min</time></div>
+      </div>
+      <div class="ing"><b>to taste</b><span>Olive oil</span><small>best quality, for drizzling</small></div>
+    </div>
+    <div class="do"><h3>Serve</h3><p>Immediately, into <b>warm bowls</b>, with a drizzle of olive oil. <b>No cheese</b>.</p></div>
+  </div>
+</div>
+
+</body>
+</html>
