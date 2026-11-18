@@ -24,10 +24,10 @@ Delete the recipes in `recipes/` that you don't want, and `crisp-groceries` if y
 
 `node build.mjs` copies `recipes/*.html` into `dist/` and generates `dist/index.html`, a searchable list of every recipe, newest first. It has no dependencies.
 
-To host it on Cloudflare Pages:
+To host it on Cloudflare Pages, the included GitHub Action ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) builds and deploys on every push to `main`:
 
-1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages → Connect to Git** and pick your fork.
-2. Set the build command to `node build.mjs` and the output directory to `dist`.
-3. Optionally, add a custom domain under **Custom domains**.
+1. Create a Cloudflare Pages project: `npx wrangler pages project create recipes --production-branch main`. If you pick a different name, set it as the repo variable `CF_PAGES_PROJECT`.
+2. Add the repo secrets `CLOUDFLARE_API_TOKEN` (a token with **Cloudflare Pages: Edit** permission) and `CLOUDFLARE_ACCOUNT_ID`.
+3. Optionally, add a custom domain in the Pages project under **Custom domains**.
 
-Every push then publishes automatically. Each recipe is available at `/<file-name>`, e.g. `/puttanesca`. Open the index on your phone and use **Add to Home Screen**.
+Each recipe is available at `/<file-name>`, e.g. `/puttanesca`. Open the index on your phone and use **Add to Home Screen**.
