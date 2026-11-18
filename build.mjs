@@ -1,4 +1,5 @@
-// Builds the site into dist/: copies every recipes/*.html and writes an index page listing them.
+// Builds the site into dist/: copies everything in recipes/ (pages, toolchart.css, toolchart.js)
+// and writes an index page listing the recipe pages.
 // No dependencies. Run with: node build.mjs
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
@@ -19,9 +20,10 @@ function added(file) {
   return new Date().toISOString().slice(0, 10);
 }
 
+for (const f of readdirSync(SRC)) copyFileSync(`${SRC}/${f}`, `${OUT}/${f}`);
+
 const recipes = readdirSync(SRC).filter(f => f.endsWith(".html")).map(f => {
   const html = readFileSync(`${SRC}/${f}`, "utf8");
-  copyFileSync(`${SRC}/${f}`, `${OUT}/${f}`);
   const header = html.match(/<header>([\s\S]*?)<\/header>/)?.[1] ?? "";
   const title = text(header.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "") || text(html.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? f);
   const facts = [...header.matchAll(/<span>([\s\S]*?)<\/span>/g)].map(m => text(m[1])).filter(s => !/^Equipment/i.test(s));
@@ -43,6 +45,7 @@ writeFileSync(`${OUT}/index.html`, `<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="Recipes">
 <title>Recipes</title>
+<script src="toolchart.js" defer></script>
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Kalam:wght@700&display=swap");
 :root{--paper:#fdfcf3;--sheet:#fffef8;--ink:#1f2a44;--muted:#6a7593;--rule:#3a5a9a;--line:#a9bbdf}

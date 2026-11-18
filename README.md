@@ -1,6 +1,6 @@
 # Recipes
 
-My recipes as one-page "toolcharts": each recipe is a single rectangular flowchart, with ingredients down the left and steps to the right, in the style of Cooking for Engineers. Each one is a self-contained HTML file that works on a phone, tablet or desktop.
+My recipes as one-page "toolcharts": each recipe is a single rectangular flowchart, with ingredients down the left and steps to the right, in the style of Cooking for Engineers. Each one is an HTML page that works on a phone, tablet or desktop, and keeps the screen on while it's open.
 
 Live at **https://recipes.lucasmeijer.com**.
 
@@ -22,7 +22,7 @@ Delete the recipes in `recipes/` that you don't want, and `crisp-groceries` if y
 
 ## Publish
 
-`node build.mjs` copies `recipes/*.html` into `dist/` and generates `dist/index.html`, a searchable list of every recipe, newest first. It has no dependencies.
+`node build.mjs` copies `recipes/` into `dist/` and generates `dist/index.html`, a searchable list of every recipe, newest first. It has no dependencies.
 
 To host it on Cloudflare Pages, the included GitHub Action ([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)) builds and deploys on every push to `main`:
 

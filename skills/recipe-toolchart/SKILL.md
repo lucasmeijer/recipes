@@ -1,17 +1,18 @@
 ---
 name: recipe-toolchart
-description: Turns a recipe into a single self-contained HTML "toolchart" — a Cooking for Engineers–style tabular recipe where ingredients sit in the left column and each step is a cell spanning the ingredients it combines, so the whole recipe reads as one rectangular flowchart. Use when asked to visualize, chart, or make a cooking-friendly page for a recipe.
+description: Turns a recipe into an HTML "toolchart" page — a Cooking for Engineers–style tabular recipe where ingredients sit in the left column and each step is a cell spanning the ingredients it combines, so the whole recipe reads as one rectangular flowchart. Use when asked to visualize, chart, or make a cooking-friendly page for a recipe.
 ---
 
 # Recipe Toolchart
 
-The output is one self-contained HTML file that works on phones, tablets and desktops. All styling and layout is already done in [template.html](template.html), which is also a complete worked example (spaghetti carbonara). Your job is only the recipe content.
+The output is one HTML page in `recipes/` that works on phones, tablets and desktops. All styling and layout lives in the shared [`recipes/toolchart.css`](../../recipes/toolchart.css), and [`recipes/toolchart.js`](../../recipes/toolchart.js) keeps the screen on while a recipe is open. Your job is only the recipe content. [`recipes/carbonara.html`](../../recipes/carbonara.html) is a complete worked example.
 
 ## Workflow
 
-1. Copy `template.html` to `recipes/<recipe-name>.html`, using a short lowercase-hyphenated name like `chili-sin-carne.html`. Keep the `<head>` and its `<style>` exactly as they are. Never edit the CSS, add classes, inline styles or scripts.
-2. Set `<title>`, then replace everything after the `RECIPE CONTENT` comment with your recipe's `<header>` and `.toolchart`.
-3. Render it and look at it (see Check).
+1. Copy `recipes/carbonara.html` to `recipes/<recipe-name>.html`, using a short lowercase-hyphenated name like `chili-sin-carne.html`.
+2. Set `<title>`, and keep the rest of the `<head>` as it is: it links `toolchart.css` and `toolchart.js`. Don't edit those two files, and don't add classes, inline styles or scripts.
+3. Replace the `<header>` and the `.toolchart` with your recipe's.
+4. Render it and look at it (see Check).
 
 ## Think of the recipe as a tree
 
@@ -51,7 +52,7 @@ The CSS lays everything out from the nesting alone. A step is a `.step` containi
 - **`data-wait="…"`** on a `.step` labels the dashed arrow drawn after it when its result has to wait for a longer branch, e.g. `set aside`, `keep warm`, `rest`, `chill`. Use it only where waiting is meaningful.
 - Steps always sit as far left as their inputs allow. You can't move a step to a later column, and you don't need to.
 
-Indent two spaces per nesting level, as in the template. It's the only way to keep the nesting readable.
+Indent two spaces per nesting level, as in the example. It's the only way to keep the nesting readable.
 
 ## Header
 
