@@ -5,7 +5,7 @@ description: Turns a recipe into an HTML "toolchart" page — a Cooking for Engi
 
 # Recipe Toolchart
 
-The output is one HTML page in `recipes/` that works on phones, tablets and desktops. All styling and layout lives in the shared [`recipes/toolchart.css`](../../recipes/toolchart.css), and [`recipes/toolchart.js`](../../recipes/toolchart.js) keeps the screen on while a recipe is open. Your job is only the recipe content. [`recipes/carbonara.html`](../../recipes/carbonara.html) is a complete worked example.
+The output is one HTML page in `recipes/` that works on phones, tablets and desktops. All styling and layout lives in the shared [`recipes/toolchart.css`](../../../recipes/toolchart.css), and [`recipes/toolchart.js`](../../../recipes/toolchart.js) keeps the screen on while a recipe is open. Your job is only the recipe content. [`recipes/carbonara.html`](../../../recipes/carbonara.html) is a complete worked example.
 
 ## Workflow
 

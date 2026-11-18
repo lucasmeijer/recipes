@@ -10,13 +10,13 @@ Fork or clone this repo, then ask your coding agent (Claude Code, Codex, …) fo
 
 > Make a recipe toolchart for chicken tikka masala.
 
-The agent follows the skills in [`skills/`](skills):
+The agent follows the skills in [`.agents/skills/`](.agents/skills):
 
 | Skill | What it does |
 |---|---|
-| [recipe-toolchart](skills/recipe-toolchart/SKILL.md) | Turns a recipe into a toolchart HTML page, saved in `recipes/` |
-| [batch-cooking](skills/batch-cooking/SKILL.md) | Designs freezer-friendly batch recipes sized to whole grocery packs |
-| [crisp-groceries](skills/crisp-groceries/SKILL.md) | Shops and manages recipes in the Crisp app (a Dutch/Belgian grocery delivery service) |
+| [recipe-toolchart](.agents/skills/recipe-toolchart/SKILL.md) | Turns a recipe into a toolchart HTML page, saved in `recipes/` |
+| [batch-cooking](.agents/skills/batch-cooking/SKILL.md) | Designs freezer-friendly batch recipes sized to whole grocery packs |
+| [crisp-groceries](.agents/skills/crisp-groceries/SKILL.md) | Shops and manages recipes in the Crisp app (a Dutch/Belgian grocery delivery service) |
 
 Delete the recipes in `recipes/` that you don't want, and `crisp-groceries` if you don't use Crisp.
 
