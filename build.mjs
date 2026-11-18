@@ -80,9 +80,18 @@ time{grid-column:2;grid-row:1;color:var(--muted);font-size:.8em;align-self:cente
 .agent.copied .done{display:inline;animation:fade .3s ease-out}
 @keyframes fade{from{opacity:0;transform:translateY(3px)}}
 @media (prefers-reduced-motion:reduce){.agent .done{animation:none}}
+html{overscroll-behavior-y:none}
+.ptr{position:fixed;top:0;left:50%;z-index:9;width:36px;height:36px;margin-left:-18px;display:grid;place-items:center;border-radius:50%;
+  background:var(--sheet);border:1.5px solid var(--rule);color:var(--rule);box-shadow:0 2px 8px rgba(31,42,68,.15);
+  transform:translateY(-48px);opacity:0;pointer-events:none}
+.ptr svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ptr.back{transition:transform .25s,opacity .25s}
+.ptr.loading svg{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<div class="ptr" id="ptr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg></div>
 <h1>Recipes</h1>
 <input id="q" type="search" placeholder="Search by name or ingredient…" autocomplete="off">
 <ul id="list">${items}
@@ -97,6 +106,39 @@ q.oninput = () => {
   for (const li of lis) { const ok = words.every(w => li.dataset.search.includes(w)); li.hidden = !ok; shown += ok; }
   document.getElementById("empty").style.display = shown ? "none" : "block";
 };
+// pull down from the top of the page to reload (also in home-screen apps, which have no browser reload)
+{
+  const ptr = document.getElementById("ptr"), icon = ptr.firstChild, THRESHOLD = 70;
+  let startY = null, pull = 0;
+  const show = (y, back) => {
+    ptr.classList.toggle("back", back);
+    ptr.style.transform = \`translateY(\${y - 48}px)\`;
+    ptr.style.opacity = Math.min(1, y / THRESHOLD);
+  };
+  addEventListener("touchstart", e => {
+    startY = scrollY <= 0 && e.touches.length === 1 && !ptr.classList.contains("loading") ? e.touches[0].clientY : null;
+  }, { passive: true });
+  addEventListener("touchmove", e => {
+    if (startY === null) return;
+    pull = Math.max(0, e.touches[0].clientY - startY);
+    if (!pull) return;
+    const y = Math.min(110, pull * 0.5);                                // resistance
+    show(y, false);
+    icon.style.transform = \`rotate(\${pull * 1.5}deg)\`;
+    ptr.style.color = y >= THRESHOLD ? "#2f8f5b" : "";
+  }, { passive: true });
+  addEventListener("touchend", () => {
+    if (startY === null) return;
+    startY = null;
+    if (Math.min(110, pull * 0.5) >= THRESHOLD) {
+      show(THRESHOLD, true);
+      icon.style.transform = "";
+      ptr.classList.add("loading");
+      setTimeout(() => location.reload(), 150);
+    } else show(0, true);
+    pull = 0;
+  });
+}
 const agent = document.getElementById("agent"), instructions = ${JSON.stringify(AGENT_INSTRUCTIONS)};
 let timer;
 agent.onclick = async () => {
